@@ -81,18 +81,6 @@ void Graphics_Check(int ixs,int iys,int ixe,int iye,int mode){
   OLED_Negation(ixs,iys,ixe,iye,mode);
 }
 
-//获取时间戳，不同平台需要更改
-uint32_t Graphics_GetTick(void){
-  return HAL_GetTick();
-}
-
-/*在上述函数按要求重写的情况下，以下函数无需更改*/
-
-//线性映射算法
-uint32_t Graphics_Mapping(uint32_t input,uint32_t as,uint32_t ae,uint32_t bs,uint32_t be){
-  return input*(be-bs)/(ae-as)+bs;
-}
-
 //背景虚化
 void Graphics_Bokeh(void){
   for(int i=0;i<SCREEN_GRAM_SIZE;i+=2){
@@ -105,6 +93,19 @@ void Graphics_Bokeh(void){
   Graphics_GratingCount();
   Graphics_Clear();
   Operate_Layer = DATA_LAYER;
+}
+
+//获取时间戳，不同平台需要更改
+uint32_t Graphics_GetTick(void){
+  return HAL_GetTick();
+}
+
+
+/*在上述函数按要求重写的情况下，以下函数无需更改*/
+
+//线性映射算法
+uint32_t Graphics_Mapping(uint32_t input,uint32_t as,uint32_t ae,uint32_t bs,uint32_t be){
+  return input*(be-bs)/(ae-as)+bs;
 }
 
 //显示字符串
