@@ -13,7 +13,7 @@
 
 #include "sxgui.h"
 
-#define TRANSITION_TIMES      120
+#define TRANSITION_TIMES      120     //虚化过渡时间, ms
 
 #define INTERFACE_WIDTH       128     //界面宽度
 #define INTERFACE_HEIGHT      64      //界面高度
