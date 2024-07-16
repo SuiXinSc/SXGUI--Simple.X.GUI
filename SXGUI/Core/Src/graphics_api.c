@@ -360,10 +360,10 @@ void Graphics_PID(Transition_DATA INPUT, Transition_DATA* OUTPUT) {
     L_derivative = L_Error - L_LastError;
 
     OUTPUT->Start =
-      (double)(PID_Parameter.Kp * Error + PID_Parameter.Ki * integral + PID_Parameter.Kd * derivative) * PID_Parameter.Factor;
+      (PID_Parameter.Kp * Error + PID_Parameter.Ki * integral + PID_Parameter.Kd * derivative) * PID_Parameter.Factor;
 
     OUTPUT->length =
-      (double)(PID_Parameter.Kp * L_Error + PID_Parameter.Ki * L_integral + PID_Parameter.Kd * L_derivative) * PID_Parameter.Factor;
+      (PID_Parameter.Kp * L_Error + PID_Parameter.Ki * L_integral + PID_Parameter.Kd * L_derivative) * PID_Parameter.Factor;
 
     LastError = Error;
     L_LastError = L_Error;
