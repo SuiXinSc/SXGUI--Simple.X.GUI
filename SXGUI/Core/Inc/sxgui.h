@@ -15,6 +15,9 @@
 #define SXGUI_EXIT        0x02
 #define SXGUI_RUNNING     0x03
 
+#define INTERFACE_PARAMETERS    int Fontsize, struct SXGUI_MenuItem* Menu, int option,int MenuNum,\
+int AppNum, uint32_t BackColor, uint32_t FontColor, int style   //界面参数的宏定义
+
 /*定义结构体*/
 struct SXGUI_MenuItem;
 struct SXGUI_APPItem;
@@ -27,6 +30,7 @@ typedef struct SXGUI_MenuItem{
   struct SXGUI_MenuItem *Parent;
   struct SXGUI_MenuItem *Sub;
   struct SXGUI_APPItem *App;
+  void (*Interface)(INTERFACE_PARAMETERS);  //界面绘制函数
   const uint8_t *Icon;    //图标的指针
 } SXGUI_MenuItem;
 
@@ -48,11 +52,12 @@ typedef struct SXGUI_KeyItem{
 } SXGUI_KeyItem;
 
 /*函数声明*/
-void SXGUI_Interface(int Fontsize,SXGUI_MenuItem *Menu,int option,int MenuNum,
-                    int AppNum,uint32_t BackColor,uint32_t FontColor,int style);
+void SXGUI_Interface(INTERFACE_PARAMETERS);
 
-int SXGUI_CreateRoot(char *Name);
-SXGUI_MenuItem *SXGUI_CreateMenu(char *Name);
+int SXGUI_CreateRoot(char *Name, void (*Interface)(INTERFACE_PARAMETERS));
+    
+SXGUI_MenuItem *SXGUI_CreateMenu(char *Name, void (*Interface)(INTERFACE_PARAMETERS));
+    
 SXGUI_APPItem *SXGUI_CreateApp(char *Name,void (*AppFunction)(struct SXGUI_KeyItem *Key));
 void SXGUI_Free(void);
 void SXGUI_DeleteMenu(SXGUI_MenuItem *Menu);
@@ -63,7 +68,8 @@ int SXGUI_RootAddApp(SXGUI_APPItem *APP);
 int SXGUI_AddSubMenu(SXGUI_MenuItem *ParentMenu, SXGUI_MenuItem *SubMenu);
 int SXGUI_AddApp(SXGUI_MenuItem *ParentMenu, SXGUI_APPItem *APP);
 
-void SXGUI_Init(char *HubName);
+void SXGUI_Init(char *HubName, void (*Interface)(INTERFACE_PARAMETERS));
+    
 void SXGUI_Main(int Fontsize,uint32_t BackColor,uint32_t FontColor,int Sytle,SXGUI_KeyItem *Key);
 
 

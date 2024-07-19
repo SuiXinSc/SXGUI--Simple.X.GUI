@@ -1,5 +1,6 @@
 /********************************************************
 * @file     :sxgui.c
+* @version  :v1.1
 * @writer   :岁心(SuiXinSc)
 *
 * @bilibili :https://space.bilibili.com/3494359452354953
@@ -15,42 +16,37 @@
 
 #define TRANSITION_TIMES      120     //虚化过渡时间, ms
 
-#define INTERFACE_WIDTH       128     //界面宽度
-#define INTERFACE_HEIGHT      64      //界面高度
+//提供的一个标准界面绘制函数
+void SXGUI_Interface(INTERFACE_PARAMETERS) {
+  int List_x = Fontsize / 2,
+      List_y = Fontsize + 1;
 
-//界面左上角坐标
-#define INTERFACE_X_ADDER     0
-#define INTERFACE_Y_ADDER     0
-
-//绘制界面, 可根据需要更改
-void SXGUI_Interface(int Fontsize, SXGUI_MenuItem* Menu, int option, int MenuNum,
-                     int AppNum, uint32_t BackColor, uint32_t FontColor, int style) {
-  int List_x = INTERFACE_X_ADDER + Fontsize / 2,
-      List_y = INTERFACE_Y_ADDER + Fontsize + 1;
-
-  Graphics_ListChoose(List_x, List_y, INTERFACE_WIDTH - List_x - 1, INTERFACE_HEIGHT - Fontsize - 1,
+  Graphics_ListChoose(List_x, List_y, 128 - List_x - 1, 64 - Fontsize - 1,
                       Fontsize, Menu, MenuNum, AppNum, option, style, FontColor);
 
-  Graphics_ShowString(INTERFACE_X_ADDER, INTERFACE_Y_ADDER, Menu->name, Fontsize, FontColor);
+  Graphics_ShowString(0, 0, Menu->name, Fontsize, FontColor);
 }
 
 //根目录
 SXGUI_MenuItem* ROOT;
 
 //创建根
-int SXGUI_CreateRoot(char* Name) {
+int SXGUI_CreateRoot(char* Name, void (*Interface)(INTERFACE_PARAMETERS)){
+
   if(ROOT != NULL) {
     return SXGUI_ERROR;     //如果已创建
   }
   ROOT = malloc(sizeof(SXGUI_MenuItem));
   ROOT->name = Name;
+  ROOT->Interface = Interface;
   return SXGUI_OK;
 }
 
 //创建菜单项
-SXGUI_MenuItem* SXGUI_CreateMenu(char* Name) {
+SXGUI_MenuItem* SXGUI_CreateMenu(char* Name, void (*Interface)(INTERFACE_PARAMETERS)){
   SXGUI_MenuItem* Menu = malloc(sizeof(SXGUI_MenuItem));
   Menu->name = Name;
+  Menu->Interface = Interface;
   return Menu;
 }
 
@@ -185,8 +181,8 @@ SXGUI_MenuItem* MenuSelect;
 SXGUI_APPItem* AppSelect;
 
 //GUI初始化
-void SXGUI_Init(char* HubName) {
-  SXGUI_CreateRoot(HubName);    //创建根目录
+void SXGUI_Init(char* HubName, void (*Interface)(INTERFACE_PARAMETERS)){
+  SXGUI_CreateRoot(HubName,Interface);    //创建根目录
   NowMenu = ROOT;     //初始化指针变量
 }
 
@@ -195,6 +191,7 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
   static int tick = 0;
   static bool Success_flag = true;
   static bool RunApp = false;
+  static bool Exit = false;
   static bool init_flag = true;
 
   if(init_flag) {
@@ -239,6 +236,7 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
       tick = Graphics_GetTick();
       Success_flag = false;
       RunApp = true;
+      Exit = false;
     }
   }
 
@@ -247,7 +245,7 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
     if(RunApp) {
       tick = Graphics_GetTick();
       Success_flag = false;
-      RunApp = false;
+      Exit = true;
     } else if(NowMenu->Parent != NULL) {
       tick = Graphics_GetTick();
       Success_flag = false;
@@ -334,9 +332,10 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
 
   //执行APP/绘制UI界面
   if(RunApp && AppSelect->Function != NULL) {
+    if(Exit){RunApp=false;}
     AppSelect->Function(Key);
   } else {
-    SXGUI_Interface(Fontsize, NowMenu, option, MenuLinkListNum, AppLinkListNum, BackColor, FontColor, style);
+    NowMenu->Interface(Fontsize, NowMenu, option, MenuLinkListNum, AppLinkListNum, BackColor, FontColor, style);
   }
 
   //虚化效果

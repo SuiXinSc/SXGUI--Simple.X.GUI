@@ -163,11 +163,21 @@ void PID_Infor(SXGUI_KeyItem *Key){
   Graphics_ShowString(0,48,tmp,12,WHITE_COLOR);
 }
 
+void Hub_Interface(INTERFACE_PARAMETERS){
+  int List_x = Fontsize / 2,
+      List_y = Fontsize + 1;
+
+  Graphics_ListChoose(List_x, List_y, 128 - List_x - 1, 64 - Fontsize - 1,
+                      Fontsize, Menu, MenuNum, AppNum, option, POINTER_STYLE, FontColor);
+
+  Graphics_ShowString(0, 0, Menu->name, Fontsize, FontColor);
+}
+
 //调用SXGUI的库函数, 初始化并创建GUI界面
 void SX_MenuInit(void){
-  SXGUI_Init("Hub");
-  SXGUI_MenuItem *Sub1 = SXGUI_CreateMenu("信息");
-  SXGUI_MenuItem *Sub2 = SXGUI_CreateMenu("GUI信息");
+  SXGUI_Init("Hub",Hub_Interface);
+  SXGUI_MenuItem *Sub1 = SXGUI_CreateMenu("信息",SXGUI_Interface);
+  SXGUI_MenuItem *Sub2 = SXGUI_CreateMenu("GUI信息",SXGUI_Interface);
   SXGUI_APPItem *App1 = SXGUI_CreateApp("Draw Line",Draw_Line);
   SXGUI_APPItem *App2 = SXGUI_CreateApp("Draw Round",Draw_Round);
   SXGUI_APPItem *App3 = SXGUI_CreateApp("Round Rect",Round_Rect);

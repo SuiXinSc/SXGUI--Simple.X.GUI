@@ -62,8 +62,10 @@ void Graphics_Init(void);
 void Graphics_Clear(void);
 void Graphics_Display(void);
 void Graphics_DrawPoint(int x,int y,uint32_t color);
-
+void Graphics_ShowBMP(int x, int y, char* BMP, int BMP_Width, int BMP_Heigth, uint32_t color);
+void Graphics_Check(int ixs, int iys, int ixe, int iye, int mode);
 void Graphics_Bokeh(void);
+
 void Graphics_ShowString(int x,int y,char *String,int size,uint32_t color);
 void Graphics_DrawLine(int xs,int ys,int xe,int ye,uint32_t color,int mode);
 void Graphics_DrawQuarterRound(int xo,int yo,int r,int width,int quarter,uint32_t color,int mode);
