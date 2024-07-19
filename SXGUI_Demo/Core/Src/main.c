@@ -119,11 +119,7 @@ void Round_Rect(SXGUI_KeyItem *Key){
 }
 
 void Kernel_Infor(SXGUI_KeyItem *Key){
-  Graphics_ShowString(0,24,"内核版本:v1.0",16,WHITE_COLOR);
-}
-
-void GUI_Infor(SXGUI_KeyItem *Key){
-  Graphics_ShowString(0,24,"SXGUI v1.0",16,WHITE_COLOR);
+  Graphics_ShowString(0,24,"SXGUI v1.1",16,WHITE_COLOR);
 }
 
 void Graphics_Infor(SXGUI_KeyItem *Key){
@@ -182,11 +178,10 @@ void SX_MenuInit(void){
   SXGUI_APPItem *App2 = SXGUI_CreateApp("Draw Round",Draw_Round);
   SXGUI_APPItem *App3 = SXGUI_CreateApp("Round Rect",Round_Rect);
   SXGUI_APPItem *App4 = SXGUI_CreateApp("内核版本",Kernel_Infor);
-  SXGUI_APPItem *App5 = SXGUI_CreateApp("GUI版本",GUI_Infor);
-  SXGUI_APPItem *App6 = SXGUI_CreateApp("图形库版本",Graphics_Infor);
-  SXGUI_APPItem *App7 = SXGUI_CreateApp("驱动信息",Driver_Infor);
-  SXGUI_APPItem *App8 = SXGUI_CreateApp("作者信息",Writer_Infor);
-  SXGUI_APPItem *App9 = SXGUI_CreateApp("PID Parameter",PID_Infor);
+  SXGUI_APPItem *App5 = SXGUI_CreateApp("图形库版本",Graphics_Infor);
+  SXGUI_APPItem *App6 = SXGUI_CreateApp("驱动信息",Driver_Infor);
+  SXGUI_APPItem *App7 = SXGUI_CreateApp("作者信息",Writer_Infor);
+  SXGUI_APPItem *App8 = SXGUI_CreateApp("PID Parameter",PID_Infor);
   SXGUI_RootAddSubMenu(Sub1);
   SXGUI_RootAddApp(App1);
   SXGUI_RootAddApp(App2);
@@ -197,7 +192,6 @@ void SX_MenuInit(void){
   SXGUI_AddApp(Sub2,App6);
   SXGUI_AddApp(Sub2,App7);
   SXGUI_AddApp(Sub2,App8);
-  SXGUI_AddApp(Sub2,App9);
 }
 
 //读取按键并消抖
