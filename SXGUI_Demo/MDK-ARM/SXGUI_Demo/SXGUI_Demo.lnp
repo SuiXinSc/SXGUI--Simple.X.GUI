@@ -25,7 +25,7 @@
 "sxgui_demo\sxgui.o"
 "sxgui_demo\graphics_api.o"
 "sxgui_demo\oled.o"
---strict --scatter "SXGUI_Demo\SXGUI_Demo.sct"
+--library_type=microlib --strict --scatter "SXGUI_Demo\SXGUI_Demo.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "SXGUI_Demo.map" -o SXGUI_Demo\SXGUI_Demo.axf

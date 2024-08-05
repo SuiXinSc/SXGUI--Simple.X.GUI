@@ -51,7 +51,7 @@ SXGUI_MenuItem* SXGUI_CreateMenu(char* Name, void (*Interface)(INTERFACE_PARAMET
 }
 
 //创建APP项
-SXGUI_APPItem* SXGUI_CreateApp(char* Name, void (*AppFunction)(struct SXGUI_KeyItem* Key)) {
+SXGUI_APPItem* SXGUI_CreateApp(char* Name, void (*AppFunction)(APP_PARAMETERS)) {
   SXGUI_APPItem* APP = malloc(sizeof(SXGUI_APPItem));
   APP->name = Name;
   APP->Function = AppFunction;
@@ -243,8 +243,6 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
   //回退
   if(Key->Back && Success_flag) {
     if(RunApp) {
-      tick = Graphics_GetTick();
-      Success_flag = false;
       Exit = true;
     } else if(NowMenu->Parent != NULL) {
       tick = Graphics_GetTick();
@@ -332,8 +330,13 @@ void SXGUI_Main(int Fontsize, uint32_t BackColor, uint32_t FontColor, int style,
 
   //执行APP/绘制UI界面
   if(RunApp && AppSelect->Function != NULL) {
-    if(Exit){RunApp=false;}
-    AppSelect->Function(Key);
+    AppSelect->Function(Key,&Exit);
+    if(Exit){
+      RunApp=false;
+      tick = Graphics_GetTick();
+      Success_flag = false;
+      Exit = false;
+    }
   } else {
     NowMenu->Interface(Fontsize, NowMenu, option, MenuLinkListNum, AppLinkListNum, BackColor, FontColor, style);
   }

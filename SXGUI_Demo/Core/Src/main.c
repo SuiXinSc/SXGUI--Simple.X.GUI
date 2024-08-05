@@ -58,7 +58,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 //APP函数
-void Draw_Line(SXGUI_KeyItem *Key){
+void Draw_Line(APP_PARAMETERS){
   static int tick;
   static int i;
   if(Graphics_GetTick()-tick>15){
@@ -72,7 +72,7 @@ void Draw_Line(SXGUI_KeyItem *Key){
   Graphics_DrawLine(127,0,127-i,63,1,DASHED_LINE);
 }
 
-void Draw_Round(SXGUI_KeyItem *Key){
+void Draw_Round(APP_PARAMETERS){
   static int tick;
   static int i;
   static bool flag = true;
@@ -95,42 +95,50 @@ void Draw_Round(SXGUI_KeyItem *Key){
   Graphics_ShowString(0,0,tmp,16,1);
 }
 
-void Round_Rect(SXGUI_KeyItem *Key){
+void Round_Rect(APP_PARAMETERS){
   static int tick;
   static int width=0;
   static bool flag = true;
-  if(Graphics_GetTick()-tick>15){
-    if(flag){
-      width++;
-    }else{
-      width--;
+  
+  for(;;){
+    if(Graphics_GetTick()-tick>15){
+      if(flag){
+        width++;
+      }else{
+        width--;
+      }
+      tick = Graphics_GetTick();
     }
-    tick = Graphics_GetTick();
+    if(width>63){
+      flag = false;
+    }else if(width<0){
+      flag = true;
+      HAL_Delay(500);
+      APP_EXIT;
+      //主动退出
+    }
+    Graphics_DrawRoundRect(0,0,width,width/2,4,1,HOLLOW);
+    Graphics_DrawRoundRect(64,0,width+64,width/2,4,1,SOLID);
+    Graphics_DrawRoundRect(0,32,width,width/2+32,8,1,SOLID);
+    Graphics_DrawRoundRect(64,32,width+64,width/2+32,8,1,HOLLOW);
+    
+    Graphics_Display();//由于是死循环，所以要自行调用显示函数
   }
-  if(width>63){
-    flag = false;
-  }else if(width<0){
-    flag = true;
-  }
-  Graphics_DrawRoundRect(0,0,width,width/2,4,1,HOLLOW);
-  Graphics_DrawRoundRect(64,0,width+64,width/2,4,1,SOLID);
-  Graphics_DrawRoundRect(0,32,width,width/2+32,8,1,SOLID);
-  Graphics_DrawRoundRect(64,32,width+64,width/2+32,8,1,HOLLOW);
 }
 
-void Kernel_Infor(SXGUI_KeyItem *Key){
+void Kernel_Infor(APP_PARAMETERS){
   Graphics_ShowString(0,24,"SXGUI v1.1",16,WHITE_COLOR);
 }
 
-void Graphics_Infor(SXGUI_KeyItem *Key){
+void Graphics_Infor(APP_PARAMETERS){
   Graphics_ShowString(0,24,"图形库版本:v1.1",16,WHITE_COLOR);
 }
 
-void Driver_Infor(SXGUI_KeyItem *Key){
+void Driver_Infor(APP_PARAMETERS){
   Graphics_ShowString(0,24,"驱动版本:v1.3.M",16,WHITE_COLOR);
 }
 
-void Writer_Infor(SXGUI_KeyItem *Key){
+void Writer_Infor(APP_PARAMETERS){
   static int tick;
   static bool CB = true;
   Graphics_ShowString(0,0,"作者:岁心",16,WHITE_COLOR);
@@ -145,7 +153,7 @@ void Writer_Infor(SXGUI_KeyItem *Key){
   Graphics_ShowString(0,24,"Bilibili: https://space.bilibili.com/3494359452354953",12,WHITE_COLOR);
 }
 
-void PID_Infor(SXGUI_KeyItem *Key){
+void PID_Infor(APP_PARAMETERS){
   char tmp[16];
   sprintf(tmp,"Kp: %.3f",PID_Parameter.Kp);
   Graphics_ShowString(0,0,tmp,12,WHITE_COLOR);
@@ -170,8 +178,12 @@ void Hub_Interface(INTERFACE_PARAMETERS){
 }
 
 //调用SXGUI的库函数, 初始化并创建GUI界面
+/*说明：这里只是封装成了单独的函数，实际使用可以直接在
+  主程序中写（因为单独写菜单项的作用域在函数内）
+*/
 void SX_MenuInit(void){
-  SXGUI_Init("Hub",Hub_Interface);
+  SXGUI_Init("Hub",Hub_Interface); //初始化GUI库
+  
   SXGUI_MenuItem *Sub1 = SXGUI_CreateMenu("信息",SXGUI_Interface);
   SXGUI_MenuItem *Sub2 = SXGUI_CreateMenu("GUI信息",SXGUI_Interface);
   SXGUI_APPItem *App1 = SXGUI_CreateApp("Draw Line",Draw_Line);
@@ -182,16 +194,22 @@ void SX_MenuInit(void){
   SXGUI_APPItem *App6 = SXGUI_CreateApp("驱动信息",Driver_Infor);
   SXGUI_APPItem *App7 = SXGUI_CreateApp("作者信息",Writer_Infor);
   SXGUI_APPItem *App8 = SXGUI_CreateApp("PID Parameter",PID_Infor);
+  //创建菜单项、APP项
+  
   SXGUI_RootAddSubMenu(Sub1);
+  SXGUI_AddSubMenu(Sub1,Sub2);
+  
   SXGUI_RootAddApp(App1);
   SXGUI_RootAddApp(App2);
   SXGUI_RootAddApp(App3);
-  SXGUI_AddSubMenu(Sub1,Sub2);
+  
   SXGUI_AddApp(Sub2,App4);
   SXGUI_AddApp(Sub2,App5);
   SXGUI_AddApp(Sub2,App6);
   SXGUI_AddApp(Sub2,App7);
   SXGUI_AddApp(Sub2,App8);
+  //添加菜单、APP（顺序随意）
+  
 }
 
 //读取按键并消抖
