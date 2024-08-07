@@ -72,8 +72,8 @@ void Graphics_ShowChar(int x, int y, char* Char, int size, uint32_t color) {
   OLED_ShowChar(x, y, Char, size, color, Operate_Layer);
 }
 
-void Graphics_ShowBMP(int x, int y, char* BMP, int BMP_Width, int BMP_Heigth, uint32_t color) {
-  OLED_ShowBMP(x, y, (uint8_t*)BMP, BMP_Heigth, BMP_Width, color, Operate_Layer);
+void Graphics_ShowBMP(int x, int y, char* BMP, int BMP_Width, int BMP_Heigth, int mode) {
+  OLED_ShowBMP(x, y, (uint8_t*)BMP, BMP_Heigth, BMP_Width, mode, Operate_Layer);
 }
 
 //矩形选择的函数, 我这里用OLED反色实现

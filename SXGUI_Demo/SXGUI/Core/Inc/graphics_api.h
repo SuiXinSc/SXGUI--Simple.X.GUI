@@ -57,12 +57,13 @@ uint32_t Graphics_GetTick(void);
 uint32_t Graphics_Mapping(uint32_t input,uint32_t as,uint32_t ae,uint32_t bs,uint32_t be);
 void Graphics_PID(Transition_DATA INPUT,Transition_DATA *OUTPUT);
 int GetStrLen(char* String);
-  
+
 void Graphics_Init(void);
 void Graphics_Clear(void);
 void Graphics_Display(void);
 void Graphics_DrawPoint(int x,int y,uint32_t color);
-void Graphics_ShowBMP(int x, int y, char* BMP, int BMP_Width, int BMP_Heigth, uint32_t color);
+void Graphics_ShowChar(int x, int y, char* Char, int size, uint32_t color);
+void Graphics_ShowBMP(int x, int y, char* BMP, int BMP_Width, int BMP_Heigth, int mode);
 void Graphics_Check(int ixs, int iys, int ixe, int iye, int mode);
 void Graphics_Bokeh(void);
 
