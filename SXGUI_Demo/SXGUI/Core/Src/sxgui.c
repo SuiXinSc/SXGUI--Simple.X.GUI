@@ -1,6 +1,6 @@
 /********************************************************
 * @file     :sxgui.c
-* @version  :v1.1
+* @version  :v1.2
 * @writer   :岁心(SuiXinSc)
 *
 * @bilibili :https://space.bilibili.com/3494359452354953
@@ -173,6 +173,43 @@ int SXGUI_AddApp(SXGUI_MenuItem* ParentMenu, SXGUI_APPItem* APP) {
   APP->Pre = Ptr;
 
   return SXGUI_OK;
+}
+
+//控件
+
+//消息框
+void Message_Box(char* Text,int Fontsize,uint32_t BackColor, uint32_t FontColor){
+  int StrLen = GetStrLen(Text);
+  
+  if(StrLen > (SCREEN_WIDTH*3/2/Fontsize)){
+    StrLen = (SCREEN_WIDTH*3/2/Fontsize);
+  }
+  
+  Graphics_DrawRoundRect((SCREEN_WIDTH-(StrLen*Fontsize/2))/2-SCREEN_HEIGHT/32,0,
+    (SCREEN_WIDTH+(StrLen*Fontsize/2))/2+SCREEN_HEIGHT/32,
+    Fontsize+SCREEN_HEIGHT/32,SCREEN_HEIGHT/16,BackColor,SOLID);
+  
+  int Start = (SCREEN_WIDTH-(StrLen*Fontsize/2))/2;
+
+  for(int n=0,i=0; i<StrLen;) {
+    Graphics_ShowChar(Start, SCREEN_HEIGHT/64, Text + n, Fontsize, FontColor);
+
+    if(Text[n] > 127) {
+      Start += Fontsize;
+      n += sizeof("中") - 1; //中文的偏移值, 删去 \0
+      i+=2;
+    } else {
+      Start += Fontsize / 2;
+      n++;
+      i++;
+    }
+  }
+}
+
+//进度条
+void Progress_Bar(int x,int y,int len,int height,uint32_t EdgeColor,uint32_t inColor,double Percent){
+  Graphics_DrawRoundRect(x,y,x+len,y+height,height/2,EdgeColor,HOLLOW);
+  Graphics_DrawRoundRect(x,y,x+(len*Percent),y+height,height/2,inColor,SOLID);
 }
 
 //指针变量

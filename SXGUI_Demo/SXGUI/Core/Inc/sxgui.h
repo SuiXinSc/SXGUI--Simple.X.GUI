@@ -70,6 +70,9 @@ int SXGUI_RootAddApp(SXGUI_APPItem *APP);
 int SXGUI_AddSubMenu(SXGUI_MenuItem *ParentMenu, SXGUI_MenuItem *SubMenu);
 int SXGUI_AddApp(SXGUI_MenuItem *ParentMenu, SXGUI_APPItem *APP);
 
+void Message_Box(char* Text,int Fontsize,uint32_t BackColor, uint32_t FontColor);
+void Progress_Bar(int x,int y,int len,int height,uint32_t EdgeColor,uint32_t inColor,double Percent);
+
 void SXGUI_Init(char *HubName, void (*Interface)(INTERFACE_PARAMETERS));
     
 void SXGUI_Main(int Fontsize,uint32_t BackColor,uint32_t FontColor,int Sytle,SXGUI_KeyItem *Key);

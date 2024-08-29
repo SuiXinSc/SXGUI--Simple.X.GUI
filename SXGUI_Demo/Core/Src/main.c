@@ -127,7 +127,7 @@ void Round_Rect(APP_PARAMETERS){
 }
 
 void Kernel_Infor(APP_PARAMETERS){
-  Graphics_ShowString(0,24,"SXGUI v1.1",16,WHITE_COLOR);
+  Graphics_ShowString(0,24,"SXGUI v1.2",16,WHITE_COLOR);
 }
 
 void Graphics_Infor(APP_PARAMETERS){
@@ -136,6 +136,23 @@ void Graphics_Infor(APP_PARAMETERS){
 
 void Driver_Infor(APP_PARAMETERS){
   Graphics_ShowString(0,24,"驱动版本:v1.3.M",16,WHITE_COLOR);
+}
+
+void Controls(APP_PARAMETERS){
+  static double percent=0;
+  static int tick=0;
+  
+  if(Graphics_GetTick()-tick>10){
+    percent += 0.01;
+    tick = Graphics_GetTick();
+  }
+  
+  if(percent>1.0f){
+    percent = 0;
+  }
+  
+  Message_Box("Message Box",16,1,0);
+  Progress_Bar(14,24,100,6,1,1,percent);
 }
 
 void Writer_Infor(APP_PARAMETERS){
@@ -194,6 +211,7 @@ void SX_MenuInit(void){
   SXGUI_APPItem *App6 = SXGUI_CreateApp("驱动信息",Driver_Infor);
   SXGUI_APPItem *App7 = SXGUI_CreateApp("作者信息",Writer_Infor);
   SXGUI_APPItem *App8 = SXGUI_CreateApp("PID Parameter",PID_Infor);
+  SXGUI_APPItem *MSG = SXGUI_CreateApp("Controls",Controls);
   //创建菜单项、APP项
   
   SXGUI_RootAddSubMenu(Sub1);
@@ -202,6 +220,7 @@ void SX_MenuInit(void){
   SXGUI_RootAddApp(App1);
   SXGUI_RootAddApp(App2);
   SXGUI_RootAddApp(App3);
+  SXGUI_RootAddApp(MSG);
   
   SXGUI_AddApp(Sub2,App4);
   SXGUI_AddApp(Sub2,App5);
